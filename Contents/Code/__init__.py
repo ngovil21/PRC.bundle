@@ -9,7 +9,7 @@ PREFIX = '/video/plexrequestchannel'
 ART = 'art-default.jpg'
 ICON = 'plexrequestchannel.png'
 
-VERSION = "0.6.8"
+from Session import VERSION
 CHANGELOG_URL = "https://raw.githubusercontent.com/ngovil21/PlexRequestChannel.bundle/master/CHANGELOG"
 
 ### URL Constants for TheMovieDataBase ##################
@@ -38,6 +38,9 @@ PUSHOVER_API_KEY = "ajMtuYCg8KmRQCNZK2ggqaqiBw2UHi"
 
 TV_SHOW_OBJECT_FIX_CLIENTS = ["Android", "Plex for Android"]
 
+from LocalePatch import SetAvailableLanguages
+
+LANGUAGES = ['en', 'fr']
 
 ########################################################
 #   Start Code
@@ -54,8 +57,11 @@ def Start():
     VideoClipObject.art = R(ART)
 
     Plugin.AddViewGroup("Details", viewMode="InfoList", mediaType="items")
+    Plugin.AddViewGroup("List", viewMode="List", mediaType="items")
 
     Log.Debug("Channel Version: " + VERSION)
+
+    SetAvailableLanguages(LANGUAGES)
 
     if 'tv' not in Dict:
         Dict['tv'] = {}
@@ -90,7 +96,7 @@ from Session import Session
 @route(PREFIX + '/main')
 def MainMenu():
     sesh = Session(session_id=Hash.MD5(str(Datetime.Now())))
-    return sesh.MainMenu()
+    return sesh.SMainMenu()
 
 '''
 @handler(PREFIX, TITLE, art=ART, thumb=ICON)
