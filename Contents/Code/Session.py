@@ -2512,7 +2512,6 @@ def sendPushBullet(title, body, device_iden=""):
     if Prefs['pushbullet_channel']:
         data['channel_tag'] = Prefs['pushbullet_channel']
     values = JSON.StringFromObject(data)
-    #return HTTP.Request(PUSHBULLET_API_URL + "pushes", data=values, headers=api_header)
     ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     pushBulletRequest = urllib2.Request(PUSHBULLET_API_URL + "pushes", data=values, headers=api_header)
     return urllib2.urlopen(pushBulletRequest,context=ctx)
