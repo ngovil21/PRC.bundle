@@ -39,7 +39,7 @@
   },
   {
     "id": "movierequests",
-    "label": "Allow users to see requests Movies?",
+    "label": "Allow users to request Movies?",
     "type": "bool",
     "default": true
   },
@@ -264,7 +264,7 @@
     "label": "Pushover User Key",
     "type": "text",
     "default": ""
-  },  
+  },
   {
     "id": "pushalot_api",
     "label": "Pushalot API Key",
