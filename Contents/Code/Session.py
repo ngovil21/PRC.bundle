@@ -154,7 +154,7 @@ class Session:
         Log.Debug("Accept-Language: " + str(Request.Headers.get('Accept-Language')))
 
     # @handler(PREFIX, TITLE, art=ART, thumb=ICON)
-    def SMainMenu(self, message=None, title1=TITLE, title2="Main Menu"):
+    def SMainMenu(self, message=None, title1=TITLE, title2=L("Main Menu")):
         oc = ObjectContainer(replace_parent=True, title1=title1, title2=title2, view_group="List")
 
         if isClient(MESSAGE_OVERLAY_CLIENTS):
@@ -278,13 +278,13 @@ class Session:
 
     def SwitchKeyboard(self):
         self.use_dumb_keyboard = not self.use_dumb_keyboard
-        return self.SMainMenu("Keyboard has been changed")
+        return self.SMainMenu(L("Keyboard has been changed"))
 
     def AddNewMovie(self, title=None):
         if title is None:
             title = L("Request a Movie")
         Log.Debug("Client does support message overlays")
-        oc = ObjectContainer(title2="Enter Movie")
+        oc = ObjectContainer(title2=L("Enter Movie"))
         if Prefs['weekly_limit'] and int(Prefs['weekly_limit'] > 0) and not self.is_admin:
             if self.token in Dict['register'] and Dict['register'][self.token]['requests'] >= int(
                     Prefs['weekly_limit']):
@@ -397,14 +397,14 @@ class Session:
                 if isClient(MESSAGE_OVERLAY_CLIENTS):
                     oc = ObjectContainer(header=TITLE, message=L("Sorry there were no results found for your search."))
                 else:
-                    oc = ObjectContainer(title2="No results")
+                    oc = ObjectContainer(title2=L("No results"))
                 if self.use_dumb_keyboard:
                     Log.Debug("Client does not support Input. Using DumbKeyboard")
                     # oc.add(DirectoryObject(key=Callback(Keyboard, callback=SearchMovie, parent_call=Callback(MainMenu,)), title="Search Again",
                     #                        thumb=R('search.png')))
                     DumbKeyboard(prefix=PREFIX, oc=oc, callback=self.SearchMovie, parent_call=Callback(self.SMainMenu),
                                  dktitle=L("Search Again"),
-                                 message="Enter the name of the Movie", dkthumb=R('search.png'))
+                                 message=L("Enter the name of the Movie"), dkthumb=R('search.png'))
                 else:
                     oc.add(InputDirectoryObject(key=Callback(self.SearchMovie), title=L("Search Again"),
                                                 prompt=L("Enter the name of the Movie:"),
@@ -418,7 +418,7 @@ class Session:
             #                        thumb=R('search.png')))
             DumbKeyboard(prefix=PREFIX, oc=oc, callback=self.SearchMovie, parent_call=Callback(self.SMainMenu),
                          dktitle=L("Search Again"),
-                         message="Enter the name of the Movie", dkthumb=R('search.png'))
+                         message=L("Enter the name of the Movie"), dkthumb=R('search.png'))
         else:
             oc.add(InputDirectoryObject(key=Callback(self.SearchMovie), title=L("Search Again"),
                                         prompt=L("Enter the name of the Movie:"), thumb=R('search.png')))
@@ -628,7 +628,7 @@ class Session:
         title_year = title + " " + "(" + year + ")" if year else title
 
         if isClient(MESSAGE_OVERLAY_CLIENTS):
-            oc = ObjectContainer(title1="Confirm TV Request", title2=F("confirmtvrequest", title_year),
+            oc = ObjectContainer(title1=L("Confirm TV Request"), title2=F("confirmtvrequest", title_year),
                                  header=TITLE, message=F("requesttv", title_year))
         else:
             oc = ObjectContainer(title1=L("Confirm TV Request"), title2=title_year + "?")
@@ -856,7 +856,7 @@ class Session:
 
     def ConfirmMusicRequest(self, searchtype, music_id, music_name, music_date=None, music_image=None):
         if isClient(MESSAGE_OVERLAY_CLIENTS):
-            oc = ObjectContainer(title1="Confirm Music Request", title2=F("confirmmusicrequest", music_name),
+            oc = ObjectContainer(title1=L("Confirm Music Request"), title2=F("confirmmusicrequest", music_name),
                                  header=TITLE, message=F("requestmusic", music_name))
         else:
             oc = ObjectContainer(title1=L("Confirm Movie Request"), title2=music_name + "?")
@@ -1183,7 +1183,7 @@ class Session:
                 if isClient(MESSAGE_OVERLAY_CLIENTS):
                     oc = ObjectContainer(header=TITLE, message=L("Movie Request Sent to CouchPotato!"))
                 else:
-                    oc = ObjectContainer(title1="Couchpotato", title2=L("Success"))
+                    oc = ObjectContainer(title1="CouchPotato", title2=L("Success"))
                 Dict['movie'][movie_id]['automated'] = True
                 Dict.Save()
             else:
@@ -1226,7 +1226,7 @@ class Session:
             Log.Debug(e.message)
             return MessageContainer(header=TITLE, message=L("Error loading CouchPotato"))
 
-        oc = ObjectContainer(title2="Manage Couchpotato")
+        oc = ObjectContainer(title2=L("Manage Couchpotato"))
 
         if movie_list['success'] and not movie_list['empty']:
             for movie in movie_list['movies']:
@@ -1390,7 +1390,7 @@ class Session:
         return oc
 
     def ManageSonarr(self):
-        oc = ObjectContainer(title1=TITLE, title2="Manage Sonarr")
+        oc = ObjectContainer(title1=TITLE, title2=L("Manage Sonarr"))
         if not Prefs['sonarr_url'].startswith("http"):
             sonarr_url = "http://" + Prefs['sonarr_url']
         else:
@@ -1446,7 +1446,7 @@ class Session:
         if callback:
             oc.add(DirectoryObject(key=callback, title=L("Return"), thumb=None))
         else:
-            oc.add(DirectoryObject(key=Callback(self.ManageSonarr), title="Return to Shows"))
+            oc.add(DirectoryObject(key=Callback(self.ManageSonarr), title=L("Return to Shows")))
         oc.add(
             DirectoryObject(key=Callback(self.SonarrMonitorShow, series_id=series_id, seasons='all', callback=callback),
                             title=L("Monitor All Seasons"), thumb=None))
@@ -1663,7 +1663,7 @@ class Session:
         return oc
 
     def ManageSickbeard(self):
-        oc = ObjectContainer(title1=TITLE, title2="Manage " + Prefs['sickbeard_fork'])
+        oc = ObjectContainer(title1=TITLE, title2=L("Manage") + " " + Prefs['sickbeard_fork'])
         if not Prefs['sickbeard_url'].startswith("http"):
             sickbeard_url = "http://" + Prefs['sickbeard_url']
         else:
@@ -1711,24 +1711,24 @@ class Session:
             else:
                 Log.Debug(JSON.StringFromObject(resp))
                 return MessageContainer(header=TITLE,
-                                        message="Error retrieving " + Prefs['sickbeard_fork'] + " Show: " + (
+                                        message=L("Error retrieving") + " " + Prefs['sickbeard_fork'] + " " + L("Show") + ": " + (
                                             title if title else str(series_id)))
         except Exception as e:
             Log.Error(str(traceback.format_exc()))  # raise e
             Log.Debug(e.message)
             return MessageContainer(header=TITLE,
-                                    message="Error retrieving " + Prefs['sickbeard_fork'] + " Show: " + (
+                                    message=L("Error retrieving") + " " + Prefs['sickbeard_fork'] + " " + L("Show") + ": " + (
                                         title if title else str(series_id)))
         if isClient(MESSAGE_OVERLAY_CLIENTS):
-            oc = ObjectContainer(title1="Manage " + Prefs['sickbeard_fork'] + " Show", title2=title,
+            oc = ObjectContainer(title1=L("Manage") + " " + Prefs['sickbeard_fork'] + " " + L("Show"), title2=title,
                                  header=TITLE if message else None,
                                  message=message)
         else:
-            oc = ObjectContainer(title1="Manage " + Prefs['sickbeard_fork'] + " Show", title2=title)
+            oc = ObjectContainer(title1=L("Manage") + " " + Prefs['sickbeard_fork'] + " " + L("Show"), title2=title)
         if callback:
-            oc.add(DirectoryObject(key=callback, title="Go Back", thumb=None))
+            oc.add(DirectoryObject(key=callback, title=L("Go Back"), thumb=None))
         else:
-            oc.add(DirectoryObject(key=Callback(self.ManageSickbeard), title="Return to Shows"))
+            oc.add(DirectoryObject(key=Callback(self.ManageSickbeard), title=L("Return to Shows")))
         oc.add(DirectoryObject(
             key=Callback(self.SickbeardMonitorShow, series_id=series_id, seasons='all', callback=callback),
             title=L("Monitor All Seasons"), thumb=None))
@@ -1736,10 +1736,10 @@ class Session:
         for season in resp['data']:
             oc.add(DirectoryObject(
                 key=Callback(self.ManageSickbeardSeason, series_id=series_id, season=season, callback=callback),
-                title=L("Season ") + str(season) if season > 0 else "Specials", thumb=None))
+                title=L("Season ") + str(season) if season > 0 else L("Specials"), thumb=None))
         oc.add(
             DirectoryObject(key=Callback(self.ManageSickbeardShow, series_id=series_id, title=title, callback=callback),
-                            title="Refresh"))
+                            title=L("Refresh")))
         return oc
 
     def ManageSickbeardSeason(self, series_id, season, message=None, callback=None):
@@ -1759,15 +1759,15 @@ class Session:
             else:
                 Log.Debug(JSON.StringFromObject(resp))
                 return MessageContainer(header=TITLE,
-                                        message="Error retrieving " + Prefs['sickbeard_fork'] + " Show ID: " + str(
-                                            series_id) + " Season " + str(
+                                        message=L("Error retrieving") + " " + Prefs['sickbeard_fork'] + " " + L("Show ID")+ ": " + str(
+                                            series_id) + " " + L("Season") + " " + str(
                                             season))
         except Exception as e:
             Log.Error(str(traceback.format_exc()))  # raise e
             Log.Debug(e.message)
             return MessageContainer(header=TITLE,
-                                    message="Error retrieving " + Prefs['sickbeard_fork'] + " Show ID: " + str(
-                                        series_id) + " Season " + str(season))
+                                    message=L("Error retrieving") + " " + Prefs['sickbeard_fork'] + " " + L("Show ID")+ ": " + str(
+                                        series_id) + " " + L("Season") + " " + str(season))
         if isClient(MESSAGE_OVERLAY_CLIENTS):
             oc = ObjectContainer(title1=L("Manage Season"), title2=L("Season ") + str(season),
                                  header=TITLE if message else None, message=message)
@@ -1816,15 +1816,15 @@ class Session:
                             Log.Debug("Error changing season status for (%s - S%s" % (series_id, s))
                 else:
                     Log.Debug(JSON.StringFromObject(resp))
-                    return MessageContainer(header=TITLE, message="Error retrieving from " + Prefs[
+                    return MessageContainer(header=TITLE, message=L("Error retrieving from") + " " + Prefs[
                         'sickbeard_fork'] + " TVDB id: " + series_id)
                 return self.ManageSickbeardShow(series_id=series_id, title="", callback=callback,
-                                                message="Series sent to " + Prefs['sickbeard_fork'])
+                                                message=L("Series sent to") + " " + Prefs['sickbeard_fork'])
             except Exception as e:
                 Log.Error(str(traceback.format_exc()))  # raise e
                 Log.Debug(
-                    Prefs['sickbeard_fork'] + " Status change failed: " + str(Response.Status) + " - " + e.message)
-                return MessageContainer(header=Title, message="Error sending series to " + Prefs['sickbeard_fork'])
+                    Prefs['sickbeard_fork'] + " " + L("Status change failed") + ": " + str(Response.Status) + " - " + e.message)
+                return MessageContainer(header=Title, message=L("Error sending series to") + " " + Prefs['sickbeard_fork'])
         elif episodes == 'all':
             season_list = seasons.split()
             try:
@@ -1833,11 +1833,11 @@ class Session:
                     JSON.ObjectFromURL(sickbeard_url + "api/" + Prefs['sickbeard_api'], values=data,
                                        method='GET' if use_sickrage else 'POST')
                 return self.ManageSickbeardShow(series_id=series_id, callback=callback,
-                                                message="Season(s) sent sent to " + Prefs['sickbeard_fork'])
+                                                message=L("Season(s) sent to") + " " + Prefs['sickbeard_fork'])
             except Exception as e:
                 Log.Error(str(traceback.format_exc()))  # raise e
-                Log.Debug(Prefs['sickbeard_fork'] + " Status Change failed: " + e.message)
-                return MessageContainer(header=TITLE, message="Error sending season to " + Prefs['sickbeard_fork'])
+                Log.Debug(Prefs['sickbeard_fork'] + " " + L("Status Change failed") + ": " + e.message)
+                return MessageContainer(header=TITLE, message=L("Error sending season to") + " " + Prefs['sickbeard_fork'])
         else:
             episode_list = episodes.split()
             try:
@@ -1846,11 +1846,11 @@ class Session:
                     JSON.ObjectFromURL(sickbeard_url + "api/" + Prefs['sickbeard_api'], values=data,
                                        method='GET' if use_sickrage else 'POST')
                 return self.ManageSickbeardSeason(series_id=series_id, season=seasons, callback=callback,
-                                                  message="Episode(s) sent to " + Prefs['sickbeard_fork'])
+                                                  message=L("Episode(s) sent to") + " " + Prefs['sickbeard_fork'])
             except Exception as e:
                 Log.Error(str(traceback.format_exc()))  # raise e
-                Log.Debug(Prefs['sickbeard_fork'] + " Status Change failed: " + e.message)
-                return MessageContainer(header=TITLE, message="Error sending episode to " + Prefs['sickbeard_fork'])
+                Log.Debug(Prefs['sickbeard_fork'] + " " + L("Status change failed") + ": " + e.message)
+                return MessageContainer(header=TITLE, message=L("Error sending episode to") + ": " + Prefs['sickbeard_fork'])
                 # return self.MainMenu()
 
     def SickbeardShowExists(self, tvdbid):
@@ -1914,7 +1914,7 @@ class Session:
         return oc
 
     # ManageChannel Functions
-    def ManageChannel(self, message=None, title1=TITLE, title2="Manage Channel"):
+    def ManageChannel(self, message=None, title1=TITLE, title2=L("Manage Channel")):
         if not self.is_admin:
             return self.SMainMenu(L("Only an admin can manage the channel!"), title1=L("Main Menu"),
                                   title2=L("Admin only"))
@@ -1957,8 +1957,8 @@ class Session:
         else:
             oc = ObjectContainer(title1=L("Manage User"), title2=message)
         oc.add(DirectoryObject(key=Callback(self.ManageUser, toke=toke),
-                               title=user + " has made " + str(Dict['register'][toke]['requests']) + " requests."))
-        oc.add(DirectoryObject(key=Callback(self.RenameUser, toke=toke), title="Rename User"))
+                               title=user + " " + L("has made") + " " + str(Dict['register'][toke]['requests']) + " " + L("requests") + "."))
+        oc.add(DirectoryObject(key=Callback(self.RenameUser, toke=toke), title=L("Rename User")))
         tv_auto = ""
         # if Prefs['sonarr_api']:
         #     tv_auto = "Sonarr"
@@ -2020,12 +2020,12 @@ class Session:
             else:
                 Dict['blocked'].append(toke)
                 Dict.Save()
-                return self.ManageUser(toke == toke, message="User has been blocked.")
+                return self.ManageUser(toke == toke, message=L("User has been blocked."))
         elif setter == 'False':
             if toke in Dict['blocked']:
                 Dict['blocked'].remove(toke)
                 Dict.Save()
-                return self.ManageUser(toke=toke, message="User has been unblocked.")
+                return self.ManageUser(toke=toke, message=L("User has been unblocked."))
         return self.ManageUser(toke=toke)
 
     def SonarrUser(self, toke, setter):
@@ -2036,21 +2036,21 @@ class Session:
             tv_auto = "Sickbeard"
         if setter == 'True':
             if toke in Dict['sonarr_users']:
-                return self.ManageUser(toke=toke, message="User already in " + tv_auto + " list")
+                return self.ManageUser(toke=toke, message=L("User already in") + " " + tv_auto + " list")
             else:
                 Dict['sonarr_users'].append(toke)
                 Dict.Save()
-                return self.ManageUser(toke=toke, message="User is now allowed to manage " + tv_auto)
+                return self.ManageUser(toke=toke, message=L("User is now allowed to manage") + " " + tv_auto)
         else:
             if toke in Dict['sonarr_users']:
                 Dict['sonarr_users'].remove(toke)
                 Dict.Save()
-                return self.ManageUser(toke=toke, message="User can no longer manage " + tv_auto)
+                return self.ManageUser(toke=toke, message=L("User can no longer manage") + " " + tv_auto)
         return self.ManageUser(toke=toke)
 
     def DeleteUser(self, toke, confirmed='False'):
         if not self.is_admin:
-            return self.SMainMenu("Only an admin can manage the channel!", title1="Main Menu", title2="Admin only")
+            return self.SMainMenu(L("Only an admin can manage the channel!"), title1=L("Main Menu"), title2=L("Admin only"))
         oc = ObjectContainer(title1=L("Confirm Delete User?"), title2=Dict['register'][toke]['nickname'])
         if confirmed == 'False':
             oc.add(DirectoryObject(key=Callback(self.DeleteUser, toke=toke, confirmed='True'), title=L("Yes")))
@@ -2063,7 +2063,7 @@ class Session:
 
     def ResetDict(self, confirm='False'):
         if not self.is_admin:
-            return self.SMainMenu("Only an admin can manage the channel!", title1="Main Menu", title2="Admin only")
+            return self.SMainMenu(L("Only an admin can manage the channel!"), title1=L("Main Menu"), title2=L("Admin only"))
         if confirm == 'False':
             if isClient(MESSAGE_OVERLAY_CLIENTS):
                 oc = ObjectContainer(header=TITLE,
@@ -2086,14 +2086,14 @@ class Session:
             Dict.Save()
             return self.ManageChannel(message=L("Dictionary has been reset!"))
 
-        return MessageContainer(header=TITLE, message="Unknown response")
+        return MessageContainer(header=TITLE, message=L("Unknown response"))
 
     def Changelog(self):
         oc = ObjectContainer(title1=TITLE, title2=L("Changelog"))
         clog = HTTP.Request(CHANGELOG_URL)
         changes = clog.content
         changes = changes.splitlines()
-        oc.add(DirectoryObject(key=Callback(self.Changelog), title="Current Version: " + str(VERSION),
+        oc.add(DirectoryObject(key=Callback(self.Changelog), title=L("Current Version") + ": " + str(VERSION),
                                thumb=R('plexrequestchannel.png')))
         for change in changes[:10]:
             csplit = change.split("-")
@@ -2111,7 +2111,7 @@ class Session:
         else:
             Dict['debug'] = True
         Dict.Save()
-        return self.ManageChannel(message="Debug is " + ("on" if Dict['debug'] else "off"))
+        return self.ManageChannel(message=L("Debug is") + " " + (L("on") if Dict['debug'] else L("off")))
 
     def ShowMessage(self, header, message):
         return MessageContainer(header=header, message=message)
@@ -2147,7 +2147,7 @@ class Session:
             page = XML.ElementFromURL("http://127.0.0.1:32400" + path, headers=Request.Headers)
         except:
             Log.Error(str(traceback.format_exc()))  # raise e
-            return MessageContainer(header=TITLE, message="Unable to navigate path!")
+            return MessageContainer(header=TITLE, message=L("Unable to navigate path!"))
         container = page.xpath("/MediaContainer")[0]
         view_group = container.get('viewGroup', 'secondary')
         if 'parentKey' in container.attrib:
@@ -2155,7 +2155,7 @@ class Session:
         elif 'librarySectionID' in container.attrib:
             parent = "/library/sections/" + container.attrib['librarySectionID']
         title = container.attrib.get('title1', "")
-        oc = ObjectContainer(title1="Report Problem", title2=title)
+        oc = ObjectContainer(title1=L("Report Problem"), title2=title)
         if parent:
             oc.add(DirectoryObject(key=Callback(self.NavigateMedia, path=parent), title=L("Go Up One"),
                                    thumb=R('return.png')))
@@ -2201,7 +2201,7 @@ class Session:
         return oc
 
     def ReportProblemMedia(self, rating_key, title):
-        oc = ObjectContainer(title1="What is the problem?", title2=title)
+        oc = ObjectContainer(title1=L("What is the problem?"), title2=title)
         page = XML.ElementFromURL("http://127.0.0.1:32400/library/metadata/" + rating_key)
         container = page.xpath("/MediaContainer")[0]
         libraryTitle = container.attrib.get("librarySectionTitle", "Unknown")
@@ -2224,7 +2224,7 @@ class Session:
                                 rating_key=rating_key, title=title,
                                 thumb=thumb))
         report = name + " in Library: '" + libraryTitle + "'"
-        oc.add(DirectoryObject(key=Callback(self.SMainMenu), title="Cancel"))
+        oc.add(DirectoryObject(key=Callback(self.SMainMenu), title=L("Cancel")))
         for problem in COMMON_MEDIA_PROBLEMS:
             oc.add(
                 DirectoryObject(key=Callback(self.ConfirmReportProblem, query=report + " - " + problem, type='media'),
@@ -2294,8 +2294,8 @@ class Session:
             user = Dict['register'][self.token]['nickname']
         body = user + " has reported a problem with the Plex Server. \n" + problem
         Notify(title=title, body=body, devices=Prefs['pushbullet_devices'])
-        return self.SMainMenu(message="The admin has been notified", title1="Main Menu",
-                              title2="Admin notified of problem")
+        return self.SMainMenu(message=L("The admin has been notified"), title1=L("Main Menu"),
+                              title2=L("Admin notified of problem"))
 
 
 def checkAdmin(toke):
@@ -2330,24 +2330,24 @@ def notifyRequest(req_id, req_type, title="", message=""):
                 movie = Dict['movie'][req_id]
                 title_year = movie['title']
                 title_year += (" (" + movie['year'] + ")" if movie.get('year', None) else "")
-                user = movie['user'] if movie['user'] else "A user"
-                title = "Plex Request Channel - New Movie Request"
-                message = user + " has requested a new movie.\n" + title_year + "\n" + \
-                          movie.get('source', "IMDB") + " id: " + req_id + "\nPoster: " + \
+                user = movie['user'] if movie['user'] else L("A user")
+                title = "Plex Request Channel - "+ L("New Movie Request")
+                message = user + " " + L("has requested a new movie") + ".\n" + title_year + "\n" + \
+                          movie.get('source', "IMDB") + " id: " + req_id + "\n"+ L("Poster") + ": " + \
                           movie['poster']
             elif req_type == 'tv':
                 tv = Dict['tv'][req_id]
-                user = tv['user'] if tv['user'] else "A user"
-                title = "Plex Request Channel - New TV Show Request"
-                message = user + " has requested a new tv show.\n" + tv['title'] + "\n" + \
-                          tv.get('source', "TVDB") + " id: " + req_id + "\nPoster: " + \
+                user = tv['user'] if tv['user'] else L("A user")
+                title = "Plex Request Channel - " + L("New TV Show Request")
+                message = user + " " + L("has requested a new tv show") +".\n" + tv['title'] + "\n" + \
+                          tv.get('source', "TVDB") + " id: " + req_id + "\n"+ L("Poster")+ ": " + \
                           tv['poster']
             elif req_type == 'music':
                 music = Dict['music'][req_id]
-                user = music['user'] if music['user'] else "A user"
-                title = "Plex Request Channel - New Album Request"
-                message = user + " has requested a new album.\n" + music['title'] + "\n" + \
-                          music.get('source', "MusicBrainz") + " id: " + req_id + "\nPoster: " + \
+                user = music['user'] if music['user'] else L("A user")
+                title = "Plex Request Channel - "+ L("New Album Request")
+                message = user + " "+ L("has requested a new album") + ".\n" + music['title'] + "\n" + \
+                          music.get('source', "MusicBrainz") + " id: " + req_id + "\n"+ L("Poster") + ": " + \
                           music['poster']
             else:
                 return
@@ -2563,4 +2563,3 @@ def userFromToken(token):
         else:
             return "guest_" + Hash.SHA1(token)[:10]
     return ""
-
