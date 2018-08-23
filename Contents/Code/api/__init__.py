@@ -33,6 +33,9 @@ sys.modules["api.Sickbeard"] = Sickbeard
 import Slack
 sys.modules["api.Slack"] = Slack
 
+import Discord
+sys.modules["api.Slack"] = Discord
+
 import Sonarr
 sys.modules["api.Sonarr"] = Sonarr
 

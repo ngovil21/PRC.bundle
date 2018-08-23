@@ -8,7 +8,7 @@ Plex Request Channel will allow you to manage requests from your users directly 
 * Search results will show posters and descriptions for identification
 * Manage Requests from most Plex Clients. Can be password protected.
 * Couchpotato, Sonarr, Radarr, Sickbeard/SickRage support is integrated for automation.
-* Pushbullet and Pushover support is also included for notifications whenever a new request is made.
+* Pushbullet/Pushover/Slack/Discord support is also included for notifications whenever a new request is made.
 
 
 **Installation**
@@ -28,8 +28,6 @@ https://support.plex.tv/hc/en-us/articles/204232573-Restricting-the-Shares
 Plex Forums Support thread:
 https://forums.plex.tv/discussion/205378/rel-plex-request-channel
 
-If you want to support me (does not equal development): <br>
-<a href="https://www.paypal.me/ngovil21/1" target=blank><img src=http://imgur.com/WSVZSTW.png alt="Buy Me a Coffee" height=50 width=100 align='center'></a> &nbsp;&nbsp; or &nbsp;&nbsp; <a href="https://www.paypal.me/ngovil21/3" target=blank><img src=http://imgur.com/gnvlm6n.jpg alt="Buy Me a Beer" height=50 width=100 align='center'></a>
 
 ##Screenshots
 ![Main Menu](http://i.imgur.com/SC0Q9dp.jpg "Main Menu") <br>

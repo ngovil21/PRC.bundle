@@ -1,3 +1,4 @@
+8/22/18 - 0.9.6 - Added Discord support for notifications.
 1/14/18 - 0.9.5 - Various bug fixes: Fix for View Requests, Manage Couch Potato, more error logging
 7/09/17 - 0.9.4 - Added menu to report requests as watched, and use unicode characters to denote request status
 7/09/17 - 0.9.3 - Fixed bugs with Couchpotato, Sending Email, and begin to compartamentalize code

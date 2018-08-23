@@ -344,6 +344,12 @@
     "type": "text",
     "default": "#general"
   },
+   {
+    "id": "discord_webhook",
+	"label": "Discord Webhook (optional)",
+    "type": "text",
+    "default": ""
+  },
   {
     "id": "telegram_api",
     "label": "Telegram Bot Token",

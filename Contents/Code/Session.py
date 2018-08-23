@@ -46,6 +46,7 @@ PUSHOVER_API_URL = 'https://api.pushover.net/1/messages.json'
 TELEGRAM_API_KEY = 'ajMtuYCg8KmRQCNZK2ggqaqiBw2UHi'
 PUSHALOT_API_URL = 'https://pushalot.com/api/sendmessage'
 SLACK_API_URL = 'https://slack.com/api/'
+DISCORD_WEBHOOK = Prefs['discord_webhook']
 ########################################################
 
 TV_SHOW_OBJECT_FIX_CLIENTS = ['Android', 'Plex for Android']
@@ -2370,7 +2371,7 @@ class Session:
                 if c.startswith('#'):  # remove leading hashtag
                     c = c[1:]
                 if not Slack.send("Request Channel - This is a test notification from the Request Channel", c):
-                    check = False
+                    check = False					
         if check:
             return self.ManageChannel(L("Notifications sent successfully!"))
         else:
@@ -2943,6 +2944,22 @@ def notifyRequest(req_id, req_type, title="", message=""):
             response = Slack.send(notification['message'])
             if response:
                 Log.Debug("Slack notification sent for: " + req_id)
+#DISCORD
+    if Prefs['discord_webhook']:
+        if Prefs['discord_webhook']:
+            channels = Prefs['discord_webhook'].split(",")
+            for c in channels:
+                c = c.strip()  # remove leading and trailing spaces after split
+                if c.startswith('#'):  # remove leading hashtag
+                    c = c[1:]
+                response = Discord.send(notification['message'], c)
+                if response:
+                    Log.Debug("Discord notification sent to channel: " + c.strip() + " for: " + req_id)
+        else:
+            response = Discord.send(notification['message'])
+            if response:
+                Log.Debug("Discord notification sent for: " + req_id)
+#END DISCORD
     if Prefs['email_to']:
         Email.send(email_from=Prefs['email_from'], email_to=Prefs['email_to'], subject=notification['title'],
                    body=notification['message_html'], username=Prefs['email_username'],
@@ -2978,6 +2995,13 @@ def Notify(title, body):
                     Log.Debug("Slack notification sent to " + c.strip())
         elif Slack.send(body):
             Log.Debug("Slack notification sent")
+#DISCORD
+    if Prefs['discord_webhook']:
+            if Discord.send(body, c.strip()):
+                Log.Debug("Discord notification sent to " + c.strip())
+    elif Discord.send(body):
+        Log.Debug("Discord notification sent")
+#END DISCORD
 
 
 def sendPushBullet(title, body, device_iden=""):
@@ -3018,6 +3042,15 @@ def sendSlack(message, channel=None):
     if channel:
         data['channel'] = channel
     return JSON.ObjectFromURL(SLACK_API_URL + "chat.postMessage", values=data)
+	
+#DISCORD 
+def sendDiscord(message, channel=None):
+    data = {
+        'text': message
+    }
+    if channel:
+        data['channel'] = channel
+    return JSON.ObjectFromURL(DISCORD_WEBHOOK, values=data)
 
 
 # noinspection PyUnresolvedReferences
