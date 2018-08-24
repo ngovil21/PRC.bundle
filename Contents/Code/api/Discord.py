@@ -2,9 +2,9 @@ import traceback
 
 DISCORD_WEBHOOK = Prefs['discord_webhook']
 
-#	def setAPI(api):
-#   	global DISCORD_WEBHOOK
-#   	DISCORD_WEBHOOK = api
+def setAPI(api):
+   	global DISCORD_WEBHOOK
+   	DISCORD_WEBHOOK = api
 
 def send(message, channel=None):
     data = {

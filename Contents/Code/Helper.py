@@ -24,6 +24,7 @@ PUSHOVER_API_URL = "https://api.pushover.net/1/messages.json"
 TELEGRAM_API_KEY = "ajMtuYCg8KmRQCNZK2ggqaqiBw2UHi"
 PUSHALOT_API_URL = "https://pushalot.com/api/sendmessage"
 SLACK_API_URL = "https://slack.com/api/"
+DISCORD_WEBHOOK = Prefs['discord_webhook']
 ########################################################
 
 LANGUAGE_ABBREVIATIONS = {
@@ -68,6 +69,8 @@ def setupApi():
     if Prefs['slack_api']:
         Slack.setAPI(Prefs['slack_api'])
         Slack.setUser(Prefs['slack_user'])
+    if Prefs['discord_webhook']:
+        Discord.setAPI(Prefs['discord_webhook'])
     if Prefs['telegram_api']:
         Telegram.setAPI(Prefs['telegram_api'])
     Email.setDefaultServer(Prefs['email_server'])
