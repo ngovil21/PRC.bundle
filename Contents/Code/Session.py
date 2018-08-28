@@ -3050,7 +3050,7 @@ def sendDiscord(message, channel=None):
     }
     if channel:
         data['channel'] = channel
-    return JSON.ObjectFromURL(DISCORD_WEBHOOK, values=data)
+    return JSON.ObjectFromURL(DISCORD_WEBHOOK + "/slack", values=data)
 
 
 # noinspection PyUnresolvedReferences
