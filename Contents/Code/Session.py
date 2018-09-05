@@ -2336,7 +2336,7 @@ class Session:
             return self.SMainMenu(L("Only an admin can manage the channel!"), title1=L("Main Menu"),
                                   title2=L("Admin only"))
         check = True
-        if Prefs['email_to']:
+	if Prefs['email_to']:
             if not Email.send(email_from=Prefs['email_from'], email_to=Prefs['email_to'],
                               subject="Request Channel - Test",
                               body="This is a test notification from the Request Channel!",
@@ -2371,12 +2371,16 @@ class Session:
                 if c.startswith('#'):  # remove leading hashtag
                     c = c[1:]
                 if not Slack.send("Request Channel - This is a test notification from the Request Channel", c):
-                    check = False					
-        if check:
+                    check = False
+        if Prefs['discord_webhook']:
+            if not Discord.send("Request Channel - This is a test notification from the Request Channel"):
+                check = False
+	if check:
             return self.ManageChannel(L("Notifications sent successfully!"))
         else:
             return self.ManageChannel(
                 L("There was a problem sending one or more notifications. Please check the logs."))
+
 
     def AllowedSections(self, message=None):
         self.update_run()
@@ -2944,22 +2948,14 @@ def notifyRequest(req_id, req_type, title="", message=""):
             response = Slack.send(notification['message'])
             if response:
                 Log.Debug("Slack notification sent for: " + req_id)
-#DISCORD
     if Prefs['discord_webhook']:
-        if Prefs['discord_webhook']:
-            channels = Prefs['discord_webhook'].split(",")
-            for c in channels:
-                c = c.strip()  # remove leading and trailing spaces after split
-                if c.startswith('#'):  # remove leading hashtag
-                    c = c[1:]
-                response = Discord.send(notification['message'], c)
-                if response:
-                    Log.Debug("Discord notification sent to channel: " + c.strip() + " for: " + req_id)
-        else:
             response = Discord.send(notification['message'])
             if response:
                 Log.Debug("Discord notification sent for: " + req_id)
-#END DISCORD
+    else:
+            response = Discord.send(notification['message'])
+            if response:
+                Log.Debug("Discord notification sent for: " + req_id)
     if Prefs['email_to']:
         Email.send(email_from=Prefs['email_from'], email_to=Prefs['email_to'], subject=notification['title'],
                    body=notification['message_html'], username=Prefs['email_username'],
@@ -2995,13 +2991,11 @@ def Notify(title, body):
                     Log.Debug("Slack notification sent to " + c.strip())
         elif Slack.send(body):
             Log.Debug("Slack notification sent")
-#DISCORD
     if Prefs['discord_webhook']:
-            if Discord.send(body, c.strip()):
-                Log.Debug("Discord notification sent to " + c.strip())
+            if Discord.send(body):
+                Log.Debug("Discord notification sent")
     elif Discord.send(body):
         Log.Debug("Discord notification sent")
-#END DISCORD
 
 
 def sendPushBullet(title, body, device_iden=""):
@@ -3043,7 +3037,6 @@ def sendSlack(message, channel=None):
         data['channel'] = channel
     return JSON.ObjectFromURL(SLACK_API_URL + "chat.postMessage", values=data)
 	
-#DISCORD 
 def sendDiscord(message, channel=None):
     data = {
         'text': message
