@@ -34,7 +34,7 @@ import Slack
 sys.modules["api.Slack"] = Slack
 
 import Discord
-sys.modules["api.Slack"] = Discord
+sys.modules["api.Discord"] = Discord
 
 import Sonarr
 sys.modules["api.Sonarr"] = Sonarr
