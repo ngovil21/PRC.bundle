@@ -8,7 +8,7 @@ Plex Request Channel will allow you to manage requests from your users directly 
 * Search results will show posters and descriptions for identification
 * Manage Requests from most Plex Clients. Can be password protected.
 * Couchpotato, Sonarr, Radarr, Sickbeard/SickRage support is integrated for automation.
-* Pushbullet and Pushover support is also included for notifications whenever a new request is made.
+* Pushbullet/Pushover/Slack/Discord support is also included for notifications whenever a new request is made.
 
 
 **Installation**

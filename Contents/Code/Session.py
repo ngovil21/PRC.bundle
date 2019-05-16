@@ -46,6 +46,7 @@ PUSHOVER_API_URL = 'https://api.pushover.net/1/messages.json'
 TELEGRAM_API_KEY = 'ajMtuYCg8KmRQCNZK2ggqaqiBw2UHi'
 PUSHALOT_API_URL = 'https://pushalot.com/api/sendmessage'
 SLACK_API_URL = 'https://slack.com/api/'
+DISCORD_WEBHOOK = Prefs['discord_webhook']
 ########################################################
 
 TV_SHOW_OBJECT_FIX_CLIENTS = ['Android', 'Plex for Android']
@@ -2335,7 +2336,7 @@ class Session:
             return self.SMainMenu(L("Only an admin can manage the channel!"), title1=L("Main Menu"),
                                   title2=L("Admin only"))
         check = True
-        if Prefs['email_to']:
+	if Prefs['email_to']:
             if not Email.send(email_from=Prefs['email_from'], email_to=Prefs['email_to'],
                               subject="Request Channel - Test",
                               body="This is a test notification from the Request Channel!",
@@ -2371,11 +2372,15 @@ class Session:
                     c = c[1:]
                 if not Slack.send("Request Channel - This is a test notification from the Request Channel", c):
                     check = False
-        if check:
+        if Prefs['discord_webhook']:
+            if not Discord.send("Request Channel - This is a test notification from the Request Channel"):
+                check = False
+	if check:
             return self.ManageChannel(L("Notifications sent successfully!"))
         else:
             return self.ManageChannel(
                 L("There was a problem sending one or more notifications. Please check the logs."))
+
 
     def AllowedSections(self, message=None):
         self.update_run()
@@ -2943,6 +2948,14 @@ def notifyRequest(req_id, req_type, title="", message=""):
             response = Slack.send(notification['message'])
             if response:
                 Log.Debug("Slack notification sent for: " + req_id)
+    if Prefs['discord_webhook']:
+            response = Discord.send(notification['message'])
+            if response:
+                Log.Debug("Discord notification sent for: " + req_id)
+    else:
+            response = Discord.send(notification['message'])
+            if response:
+                Log.Debug("Discord notification sent for: " + req_id)
     if Prefs['email_to']:
         Email.send(email_from=Prefs['email_from'], email_to=Prefs['email_to'], subject=notification['title'],
                    body=notification['message_html'], username=Prefs['email_username'],
@@ -2978,6 +2991,11 @@ def Notify(title, body):
                     Log.Debug("Slack notification sent to " + c.strip())
         elif Slack.send(body):
             Log.Debug("Slack notification sent")
+    if Prefs['discord_webhook']:
+            if Discord.send(body):
+                Log.Debug("Discord notification sent")
+    elif Discord.send(body):
+        Log.Debug("Discord notification sent")
 
 
 def sendPushBullet(title, body, device_iden=""):
@@ -3018,6 +3036,14 @@ def sendSlack(message, channel=None):
     if channel:
         data['channel'] = channel
     return JSON.ObjectFromURL(SLACK_API_URL + "chat.postMessage", values=data)
+	
+def sendDiscord(message, channel=None):
+    data = {
+        'text': message
+    }
+    if channel:
+        data['channel'] = channel
+    return HTTP.Request(DISCORD_WEBHOOK + "/slack", values=data)
 
 
 # noinspection PyUnresolvedReferences
