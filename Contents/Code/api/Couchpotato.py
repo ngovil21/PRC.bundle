@@ -56,22 +56,22 @@ def getProfileIdFromName(name):
 
 def getCategories():
     try:
-        cat = JSON.ObjectFromURL(getURL("profile.list"))
+        cat = JSON.ObjectFromURL(getURL("category.list"))
         if 'success' in cat:
             return cat
     except Exception as e:
-        Log.Debug("Error in getProfiles: " + e.message)
+        Log.Debug("Error in getCategories: " + e.message)
         Log.Error(str(traceback.format_exc()))  # raise last error
     return None
 
 
 def getCategoryIdFromName(name):
-    cat = getProfiles()
+    cat = getCategories()
     if not cat:
         return -1
-    for key in cat['list']:
-        if key['label'] == name:
-            return key['_id']
+    for category in cat['categories']:
+        if category['label'] == name:
+            return category['_id']
     return -1
 
 
